@@ -1,0 +1,104 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    min-height: 100vh;
+    background-image: url(bg.png);
+    background-position: center;
+    font-family: "Poppins", sans-serif;
+    padding: 30px 15px;
+}
+
+.container {
+    max-width: 850px;
+}
+
+h2 {
+    color: white;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 3px 10px rgba(0, 0, 0, .25);
+}
+
+.card {
+    border: none;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, .18);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    box-shadow: 0 12px 35px rgba(0, 0, 0, .25);
+}
+
+label {
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 6px;
+}
+
+.form-control {
+    border-radius: 10px;
+    border: 1px solid #ced4da;
+    padding: 12px;
+    transition: .3s;
+}
+
+.form-control:focus {
+    border-color: #0d6efd;
+    box-shadow: 0 0 10px rgba(13, 110, 253, .25);
+}
+
+.btn-primary {
+    width: 100%;
+    padding: 12px;
+    font-size: 17px;
+    font-weight: 600;
+    border-radius: 10px;
+    transition: .3s;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+}
+
+.table {
+    background: white;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .2);
+}
+
+.table thead th {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody td {
+    vertical-align: middle;
+    text-align: center;
+}
+
+.table tbody tr {
+    transition: .25s;
+}
+
+.table tbody tr:hover {
+    background: #eef7ff;
+}
+
+button {
+    transition: .3s;
+}
+
+button:hover {
+    transform: scale(1.03);
+}
+
+#search {
+    border-radius: 10px;
+    padding: 12px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, .1);
+}
+
