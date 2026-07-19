@@ -175,18 +175,18 @@ const themeBtn = document.getElementById("themeBtn");
 // Load Saved Theme
 if (localStorage.getItem("theme") === "dark") {
     document.body.classList.add("dark-mode");
-    themeBtn.innerHTML = "☀️ Light Mode";
-} else {
     themeBtn.innerHTML = "🌙 Dark Mode";
+} else {
+    themeBtn.innerHTML = "☀️ Light Mode";
 }
 // Toggle Theme
 themeBtn.addEventListener("click", function () {
     document.body.classList.toggle("dark-mode");
     if (document.body.classList.contains("dark-mode")) {
         localStorage.setItem("theme", "dark");
-        themeBtn.innerHTML = "☀️ Light Mode";
+        themeBtn.innerHTML = "🌙 Dark Mode";
     } else {
         localStorage.setItem("theme", "light");
-        themeBtn.innerHTML = "🌙 Dark Mode";
+        themeBtn.innerHTML = "☀️ Light Mode";
     }
 });
