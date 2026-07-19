@@ -1,101 +1,191 @@
-// Load contacts when page opens
-window.onload = function () {
-    displayContacts();
-}
-
+// ===============================
+// Variables
+// ===============================
+let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
+const nameInput = document.getElementById("name");
+const numberInput = document.getElementById("number");
+const saveBtn = document.getElementById("saveBtn");
+const searchInput = document.getElementById("search");
+const contactList = document.getElementById("contactList");
+const contactCount = document.getElementById("contactCount");
+// ===============================
+// Event Listeners
+// ===============================
+// Save Button
+saveBtn.addEventListener("click", addContact);
+// Press Enter to Save
+nameInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        addContact();
+    }
+});
+numberInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter") {
+        addContact();
+    }
+});
+// Search Contact
+searchInput.addEventListener("keyup", searchContact);
+// Load Contacts
+displayContacts();
+// ===============================
 // Add Contact
-
+// ===============================
 function addContact() {
-
-    let name = document.getElementById("name").value.trim();
-    let number = document.getElementById("number").value.trim();
-
-    if (name == "" || number == "") {
-        alert("Please fill all fields");
+    let name = nameInput.value.trim();
+    let number = numberInput.value.trim();
+    if (name === "" || number === "") {
+        alert("Please fill all fields.");
         return;
     }
-
-    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
-
     contacts.push({
         name: name,
         number: number
     });
-
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-
-    document.getElementById("name").value = "";
-    document.getElementById("number").value = "";
-
+    saveContacts();
+    nameInput.value = "";
+    numberInput.value = "";
     displayContacts();
-
 }
-
+// ===============================
 // Display Contacts
-
+// ===============================
 function displayContacts() {
-
-    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
-    let output = "";
+    contactList.innerHTML = "";
     contacts.forEach((contact, index) => {
-
-        output += `
-        <tr>
-            <td>${contact.name}</td>
-            <td>${contact.number}</td>
-            <td>
-            <button class="btn btn-danger btn-sm"
-            onclick="deleteContact(${index})">
-            Delete
-            </button>
-            </td>
-        </tr>
+        contactList.innerHTML += `
+        <div class="contact-card">
+            <div class="contact-info">
+                <h4>👤 ${contact.name}</h4>
+                <p>📞 ${contact.number}</p>
+            </div>
+            <div class="action-buttons">
+                <button
+                    class="btn btn-warning"
+                    onclick="editContact(${index})">
+                    ✏️ Edit
+                </button>
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteContact(${index})">
+                    🗑 Delete
+                </button>
+            </div>
+        </div>
         `;
-
     });
-    document.getElementById("contactList").innerHTML = output;
+    updateCounter();
 }
-
-// Delete Contact
-
-function deleteContact(index) {
-
-    let contacts = JSON.parse(localStorage.getItem("contacts")) || [];
-    contacts.splice(index, 1);
-    localStorage.setItem("contacts", JSON.stringify(contacts));
-    displayContacts();
-
-}
-
+// ===============================
 // Search Contact
-
+// ===============================
 function searchContact() {
-
-    let input = document.getElementById("search").value.toLowerCase();
-    let contacts = JSON.parse(localStorage.getItem("contacts")) || []
-    let output = "";
-
-    contacts.forEach((contact, index) => {
-
-        if (contact.name.toLowerCase().includes(input) ||
-            contact.number.includes(input)) {
-
-            output += `
-            <tr>
-            <td>${contact.name}</td>
-            <td>${contact.number}</td>
-            <td>
-            <button class="btn btn-danger btn-sm"
-            onclick="deleteContact(${index})">
-            Delete
-            </button>
-            </td>
-            </tr>
-            `;
-        }
-
-    });
-
-    document.getElementById("contactList").innerHTML = output;
-
+    let keyword = searchInput.value.toLowerCase();
+    let filtered = contacts.filter(contact =>
+        contact.name.toLowerCase().includes(keyword) ||
+        contact.number.includes(keyword)
+    );
+    showFilteredContacts(filtered);
 }
+// ===============================
+// Show Filtered Contacts
+// ===============================
+function showFilteredContacts(filteredContacts) {
+    contactList.innerHTML = "";
+    filteredContacts.forEach((contact) => {
+        let originalIndex = contacts.indexOf(contact);
+        contactList.innerHTML += `
+        <div class="contact-card">
+            <div class="contact-info">
+                <h4>👤 ${contact.name}</h4>
+                <p>📞 ${contact.number}</p>
+            </div>
+            <div class="action-buttons">
+                <button
+                    class="btn btn-warning"
+                    onclick="editContact(${originalIndex})">
+                    ✏️ Edit
+                </button>
+                <button
+                    class="btn btn-danger"
+                    onclick="deleteContact(${originalIndex})">
+                    🗑 Delete
+                </button>
+            </div>
+        </div>
+        `;
+    });
+}
+// ===============================
+// Contact Counter
+// ===============================
+function updateCounter() {
+    contactCount.textContent = contacts.length;
+}
+// ===============================
+// Save to Local Storage
+// ===============================
+function saveContacts() {
+    localStorage.setItem(
+        "contacts",
+        JSON.stringify(contacts)
+    );
+}
+// ===============================
+// Edit Contact
+// ===============================
+function editContact(index) {
+    let newName = prompt(
+        "Enter new name:",
+        contacts[index].name
+    );
+    if (newName === null) return;
+    let newNumber = prompt(
+        "Enter new number:",
+        contacts[index].number
+    );
+    if (newNumber === null) return;
+    newName = newName.trim();
+    newNumber = newNumber.trim();
+    if (newName === "" || newNumber === "") {
+        alert("Fields cannot be empty.");
+        return;
+    }
+    contacts[index].name = newName;
+    contacts[index].number = newNumber;
+    saveContacts();
+    displayContacts();
+}
+// ===============================
+// Delete Contact
+// ===============================
+function deleteContact(index) {
+    let confirmDelete = confirm(
+        "Delete this contact?"
+    );
+    if (!confirmDelete) return;
+    contacts.splice(index, 1);
+    saveContacts();
+    displayContacts();
+}
+// ===============================
+// Dark Mode
+// ===============================
+const themeBtn = document.getElementById("themeBtn");
+// Load Saved Theme
+if (localStorage.getItem("theme") === "dark") {
+    document.body.classList.add("dark-mode");
+    themeBtn.innerHTML = "🌙 Dark Mode";
+}
+// Toggle Theme
+themeBtn.addEventListener("click", function () {
+    document.body.classList.toggle("dark-mode");
+    if (document.body.classList.contains("dark-mode")) {
+        localStorage.setItem("theme", "dark");
+        themeBtn.innerHTML = "🌙 Dark Mode";
+    }
+    else {
+        localStorage.setItem("theme", "light");
+        themeBtn.innerHTML = "☀️ Light Mode";
+    }
+});
